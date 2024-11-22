@@ -11,17 +11,10 @@
           [formControl]="newTaskCtrl"
           (keydown.enter)="changeHandler()"
         />
-        <!-- (change)="changeHandler($event)" forma de manejar los inputs con signal
-             [formControl]="newTaskCtrl" forma más profesional de manejar los inputs-->
       </div>
     </header>
     
     <div class="container todoapp-wrapper">
-   <!--<pre>
-        <code>
-          {{ tasks() | json }}
-        </code>
-       </pre>  esta es una manera de debuggear-->
       <section class="main">
         <ul class="todo-list">
           <li (dblclick)="updateTaskEditingMode(i)" 
@@ -75,7 +68,6 @@
           </strong>
         </span>
         <ng-template #elseBlock> items left</ng-template>
-        <!-- Remove this if you don't implement routing -->
         <ul class="filters">
           <li>
             <a routerLink="/" (click)="changeFilter('all')" [class.selected]="filter() === 'all'">All</a>
