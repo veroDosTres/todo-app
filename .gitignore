@@ -43,3 +43,8 @@ Thumbs.db
 
 # Ignorar la carpeta labs
 src/app/pages/labs/
+
+# Ignorar firebase
+.firebase
+.firebaserc
+firebase.json

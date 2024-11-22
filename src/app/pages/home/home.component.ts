@@ -1,12 +1,12 @@
 import { Component, computed, effect, inject, Injector, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Task } from './../../models/task.model';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -15,7 +15,7 @@ export class HomeComponent {
   tasks = signal<Task[]>([]);
 
   filter = signal<'all' | 'pending' | 'completed'>('all');
-  
+
   tasksByFilter = computed(() => {
     const filter = this.filter();
     const tasks = this.tasks();
@@ -40,32 +40,32 @@ export class HomeComponent {
   ngOnInit() {
     const storage = localStorage.getItem('tasks');
     if (storage) {
-        try {
-            const tasks = JSON.parse(storage); 
-            this.tasks.set(tasks); 
-        } catch (error) {
-            console.error('Error al parsear tareas del localStorage:', error);
-            
-            localStorage.removeItem('tasks');
-        }
-    } 
+      try {
+        const tasks = JSON.parse(storage);
+        this.tasks.set(tasks);
+      } catch (error) {
+        console.error('Error al parsear tareas del localStorage:', error);
+
+        localStorage.removeItem('tasks');
+      }
+    }
     this.trackTasks();
   }
 
   trackTasks() {
     effect(() => {
-      const tasks = this.tasks(); 
+      const tasks = this.tasks();
       console.log('Tareas actuales:', tasks);
       try {
-          localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('tasks', JSON.stringify(tasks));
       } catch (error) {
-          console.error('Error al guardar tareas en localStorage:', error);
+        console.error('Error al guardar tareas en localStorage:', error);
       }
-  }, { injector: this.injector });
+    }, { injector: this.injector });
   }
 
   changeHandler() {
-    if(this.newTaskCtrl.valid && this.newTaskCtrl.value.trim() !== '') {
+    if (this.newTaskCtrl.valid && this.newTaskCtrl.value.trim() !== '') {
       const value = this.newTaskCtrl.value;
       this.addTask(value.trim());
       this.newTaskCtrl.setValue('');
@@ -87,51 +87,52 @@ export class HomeComponent {
 
   toggleCompleted(index: number) {
     this.tasks.update((tasks) =>
-    tasks.map((task, position) => {
-      if(position === index) {
-        task.completed = !task.completed;
-      }
-      return task;
-    }))}
+      tasks.map((task, position) => {
+        if (position === index) {
+          task.completed = !task.completed;
+        }
+        return task;
+      }))
+  }
 
-    updateTaskEditingMode(index: number) {
-      if (this.tasks()[index].completed) return;
-      this.tasks.update((tasks) => {
-        return tasks.map((task, position) => {
-          if (position === index) {
-            return {
-              ...task,
-              editing: true
-            }
-          }
+  updateTaskEditingMode(index: number) {
+    if (this.tasks()[index].completed) return;
+    this.tasks.update((tasks) => {
+      return tasks.map((task, position) => {
+        if (position === index) {
           return {
             ...task,
-            editing: false
-          };
-        });
-      })
-    }
-
-    updateTaskText(index: number, event: Event) {
-      const input = event.target as HTMLInputElement;
-      const newValue = input.value;
-      this.tasks.update((tasks) => {
-        return tasks.map((task, position) => {
-          if (position === index) {
-            return {
-              ...task,
-              title: newValue,
-              editing: false
-            }
+            editing: true
           }
-          return task;
-        });
-      })
-    }
-
-    changeFilter(filter: 'all' | 'pending' | 'completed') {
-      this.filter.set(filter);
-    }
-
+        }
+        return {
+          ...task,
+          editing: false
+        };
+      });
+    })
   }
+
+  updateTaskText(index: number, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const newValue = input.value;
+    this.tasks.update((tasks) => {
+      return tasks.map((task, position) => {
+        if (position === index) {
+          return {
+            ...task,
+            title: newValue,
+            editing: false
+          }
+        }
+        return task;
+      });
+    })
+  }
+
+  changeFilter(filter: 'all' | 'pending' | 'completed') {
+    this.filter.set(filter);
+  }
+
+}
 
