@@ -52,7 +52,7 @@
     color: rgba(0, 0, 0, 0.4);
   }
   
-  .header h1 {
+  .header h2 {
     width: 100%;
     font-size: 3rem;
     font-weight: 200;
@@ -61,7 +61,7 @@
     margin: 0;
   }
   
-  .header h1 + p {
+  .header h2 + p {
     margin: 0;
     color: white;
     padding-bottom: 1.2rem;
