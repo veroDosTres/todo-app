@@ -40,3 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Ignorar la carpeta labs
+src/app/pages/labs/
